@@ -1,0 +1,5 @@
+# Firebase CLI local cache (regenerated locally; never deploy or commit)
+.firebase/
+
+# Node.js dependencies
+node_modules/
