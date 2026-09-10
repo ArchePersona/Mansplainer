@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mansplainer — Rapid Linguistic Register Translator</title>
+  <meta name="description" content="Ultra-fast register translator between Caveman and MIT modes using OpenRouter free tier models.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header & Meta Bar -->
+    <header class="app-header">
+      <div class="brand-cluster">
+        <div class="brand-icon-wrap">
+          <span class="brand-emoji" id="brandEmoji">🪨⚡🎓</span>
+        </div>
+        <div>
+          <h1 class="brand-title">MANSPLAINER</h1>
+          <p class="brand-tagline">High-velocity register translator: <em>Primitive Primal ⇄ Academic MIT</em></p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Static reference banner -->
+        <div class="pricing-badge" title="Informational tier reference">
+          <span class="badge-pill">EST. ENTERPRISE REF</span>
+          <span class="badge-cost">$20/year</span>
+        </div>
+
+        <!-- API Key Status / Modal Trigger -->
+        <button id="apiKeyBtn" class="btn btn-subtle" aria-label="Configure OpenRouter API Key">
+          <span class="key-indicator dot-pending" id="keyStatusDot"></span>
+          <span id="keyStatusText">Set OpenRouter Key</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace Grid -->
+    <main class="workspace">
+      <!-- Top Controls & Mode Switcher Bar -->
+      <section class="control-bar card">
+        <div class="mode-switcher-container">
+          <span class="control-label">TRANSLATION VECTOR:</span>
+          <div class="mode-pill-toggle" role="radiogroup" aria-label="Translation Mode">
+            <button type="button" id="modeCavemanToMit" class="mode-btn active" data-mode="CAVEMAN_TO_MIT">
+              <span class="mode-icon">🦴 ➔ 🏛️</span>
+              <span class="mode-text"><strong>CAVEMAN</strong> → <strong>MIT</strong></span>
+            </button>
+            <button type="button" id="modeMitToCaveman" class="mode-btn" data-mode="MIT_TO_CAVEMAN">
+              <span class="mode-icon">🏛️ ➔ 🦴</span>
+              <span class="mode-text"><strong>MIT</strong> → <strong>CAVEMAN</strong></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="model-selector-container">
+          <div class="model-header-line">
+            <label for="modelSelect" class="control-label">OPENROUTER FREE MODEL:</label>
+            <span id="modelCountBadge" class="micro-badge">Querying OpenRouter...</span>
+          </div>
+          <div class="select-wrapper">
+            <select id="modelSelect" class="styled-select" disabled>
+              <option value="">Discovering zero-cost models...</option>
+            </select>
+            <button id="refreshModelsBtn" class="icon-btn" title="Refresh free models list" aria-label="Refresh models">
+              🔄
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Preset Chips -->
+      <section class="presets-bar" aria-label="Sample Prompt Presets">
+        <span class="presets-label">Quick Samples:</span>
+        <div class="preset-chips" id="presetChips"></div>
+      </section>
+
+      <!-- Dual Editor Panes (Input & Output) -->
+      <section class="panes-grid">
+        <!-- Input Pane -->
+        <div class="pane card input-pane">
+          <div class="pane-header">
+            <div class="pane-title-group">
+              <span class="pane-tag" id="inputRegisterTag">CAVEMAN REGISTER</span>
+              <span class="pane-hint">💡 Tip: Double-click inside box to paste from clipboard</span>
+            </div>
+            <div class="pane-actions">
+              <span class="char-counter" id="inputCharCount">0 chars</span>
+              <button id="clearInputBtn" class="btn btn-xs btn-outline" title="Clear text">Clear</button>
+            </div>
+          </div>
+
+          <div class="textarea-wrapper">
+            <textarea 
+              id="sourceInput" 
+              class="styled-textarea" 
+              placeholder="Enter crude, blunt caveman thought or double-click to paste... e.g., 'Make code fast so computer no freeze'"
+              spellcheck="false"></textarea>
+            <div id="pasteNotification" class="floating-notification hidden">📋 Pasted from clipboard!</div>
+          </div>
+
+          <div class="pane-footer">
+            <div class="input-meta">
+              <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to translate
+            </div>
+            <button id="translateBtn" class="btn btn-primary action-btn">
+              <span class="btn-icon">⚡</span>
+              <span class="btn-text">TRANSLATE NOW</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Output Pane -->
+        <div class="pane card output-pane">
+          <div class="pane-header">
+            <div class="pane-title-group">
+              <span class="pane-tag mit-tag" id="outputRegisterTag">MIT REGISTER</span>
+              <span id="copyBadge" class="copy-badge hidden">✓ COPIED TO CLIPBOARD</span>
+            </div>
+            <div class="pane-actions">
+              <button id="manualCopyBtn" class="btn btn-xs btn-subtle" title="Copy to clipboard">📋 Copy Output</button>
+              <button id="clearOutputBtn" class="btn btn-xs btn-outline" title="Clear result">Clear</button>
+            </div>
+          </div>
+
+          <div class="textarea-wrapper output-wrapper">
+            <div id="outputDisplay" class="output-box" tabindex="0" aria-live="polite">
+              <span class="placeholder-text">Translated linguistic transformation will materialize here...</span>
+            </div>
+            <div id="loadingOverlay" class="loading-overlay hidden">
+              <div class="spinner"></div>
+              <p id="loadingStatusText">Consulting OpenRouter free model...</p>
+            </div>
+          </div>
+
+          <div class="pane-footer output-footer">
+            <div class="telemetry" id="telemetryBox">
+              <span id="telemetryModel">Model: -</span>
+              <span class="dot-sep">•</span>
+              <span id="telemetryLatency">Latency: -</span>
+            </div>
+            <button id="swapDirectionBtn" class="btn btn-secondary btn-sm" title="Use this output as new input & flip mode">
+              ⇄ Swap & Invert
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Error Banner -->
+      <div id="errorAlert" class="error-banner hidden" role="alert">
+        <div class="error-icon">⚠️</div>
+        <div class="error-content">
+          <strong id="errorTitle">Translation Execution Failed</strong>
+          <p id="errorMessage">OpenRouter request returned an error.</p>
+        </div>
+        <button id="dismissErrorBtn" class="btn btn-xs btn-ghost" aria-label="Dismiss error">✕</button>
+      </div>
+
+      <!-- Developer / Verification Test Suite Panel -->
+      <section class="test-suite-panel card">
+        <div class="test-panel-header">
+          <div class="test-title">
+            <h3>🔬 Built-in Architecture Verification Suite</h3>
+            <p>Unit & functional tests for register transformations, API contracts, clipboard handlers & error isolation.</p>
+          </div>
+          <button id="runTestsBtn" class="btn btn-outline btn-sm">
+            ▶ Run Self-Tests
+          </button>
+        </div>
+        <div id="testResultsContainer" class="test-results-log hidden">
+          <div class="test-summary-bar" id="testSummaryBar">Initializing tests...</div>
+          <ul id="testList" class="test-list"></ul>
+        </div>
+      </section>
+    </main>
+
+    <!-- OpenRouter API Key Modal -->
+    <div id="apiKeyModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-card card">
+        <div class="modal-header">
+          <h3 id="modalTitle">OpenRouter Credentials</h3>
+          <button id="closeModalBtn" class="icon-btn" aria-label="Close dialog">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">
+            Mansplainer executes real-time completions directly via OpenRouter's free models. 
+            Your API key is kept <strong>strictly ephemeral in memory / browser storage</strong> and is never sent to any intermediary server.
+          </p>
+          <div class="form-group">
+            <label for="apiKeyInput" class="form-label">OpenRouter API Key (<code>sk-or-v1-...</code>):</label>
+            <div class="input-group">
+              <input 
+                type="password" 
+                id="apiKeyInput" 
+                class="styled-input" 
+                placeholder="sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxx"
+                autocomplete="off"
+                spellcheck="false">
+              <button id="toggleKeyVisibilityBtn" class="btn btn-subtle" type="button">👁️</button>
+            </div>
+            <span class="helper-text">Don't have a key? Grab one for free at <a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer">openrouter.ai/keys</a>.</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="clearKeyBtn" class="btn btn-outline btn-danger-soft">Remove Key</button>
+          <button id="saveKeyBtn" class="btn btn-primary">Save & Connect</button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="app-footer">
+      <span>Mansplainer Engine • Zero Data Retention • 100% Client-Side In-Memory Dispatch</span>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="./openrouter.js"></script>
+  <script src="./clipboard.js"></script>
+  <script src="./tests.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
