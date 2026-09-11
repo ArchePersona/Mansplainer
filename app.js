@@ -48,7 +48,8 @@
         selectedModel: '',
         freeModels: [],
         isTranslating: false,
-        copyTimeoutId: null
+        copyTimeoutId: null,
+        outputLevel: 'CAVEMAN' // 'CAVEMAN' | '8TH_GRADE'
       };
 
       this.dom = {};
@@ -69,6 +70,9 @@
         brandEmoji: document.getElementById('brandEmoji'),
         modeCavemanToMit: document.getElementById('modeCavemanToMit'),
         modeMitToCaveman: document.getElementById('modeMitToCaveman'),
+        levelSwitcherContainer: document.getElementById('levelSwitcherContainer'),
+        levelCaveman: document.getElementById('levelCaveman'),
+        levelEighth: document.getElementById('levelEighth'),
         modelSelect: document.getElementById('modelSelect'),
         modelCountBadge: document.getElementById('modelCountBadge'),
         refreshModelsBtn: document.getElementById('refreshModelsBtn'),
@@ -113,6 +117,10 @@
       // Mode switching
       this.dom.modeCavemanToMit.addEventListener('click', () => this.setMode('CAVEMAN_TO_MIT'));
       this.dom.modeMitToCaveman.addEventListener('click', () => this.setMode('MIT_TO_CAVEMAN'));
+
+      // Output level switching
+      this.dom.levelCaveman.addEventListener('click', () => this.setOutputLevel('CAVEMAN'));
+      this.dom.levelEighth.addEventListener('click', () => this.setOutputLevel('8TH_GRADE'));
 
       // Input character counter
       this.dom.sourceInput.addEventListener('input', () => this.handleInputChange());
@@ -193,6 +201,7 @@
         this.dom.outputRegisterTag.textContent = 'MIT REGISTER';
         this.dom.outputRegisterTag.className = 'pane-tag mit-tag';
         this.dom.sourceInput.placeholder = 'Enter crude, blunt caveman thought or double-click to paste... e.g., "Make code fast so computer no freeze"';
+        this.dom.levelSwitcherContainer.classList.add('hidden');
       } else {
         this.dom.brandEmoji.textContent = '🏛️⚡🪨';
         this.dom.inputRegisterTag.textContent = 'MIT REGISTER';
@@ -200,7 +209,37 @@
         this.dom.outputRegisterTag.textContent = 'CAVEMAN REGISTER';
         this.dom.outputRegisterTag.className = 'pane-tag';
         this.dom.sourceInput.placeholder = 'Enter articulate corporate/academic prose or double-click to paste... e.g., "We must optimize microservice throughput"';
+        this.dom.levelSwitcherContainer.classList.remove('hidden');
       }
+
+      this.refreshOutputTag();
+    }
+
+    setOutputLevel(level) {
+      if (this.state.outputLevel === level) return;
+      this.state.outputLevel = level;
+      this.dom.levelCaveman.classList.toggle('active', level === 'CAVEMAN');
+      this.dom.levelEighth.classList.toggle('active', level === '8TH_GRADE');
+      this.refreshOutputTag();
+    }
+
+    refreshOutputTag() {
+      if (this.state.mode === 'MIT_TO_CAVEMAN') {
+        if (this.state.outputLevel === '8TH_GRADE') {
+          this.dom.outputRegisterTag.textContent = '8TH GRADE SIMPLIFIED';
+          this.dom.outputRegisterTag.className = 'pane-tag eight-grade-tag';
+        } else {
+          this.dom.outputRegisterTag.textContent = 'CAVEMAN REGISTER';
+          this.dom.outputRegisterTag.className = 'pane-tag';
+        }
+      }
+    }
+
+    resolvePromptMode() {
+      if (this.state.mode === 'MIT_TO_CAVEMAN') {
+        return this.state.outputLevel === '8TH_GRADE' ? 'MIT_TO_8TH_GRADE' : 'MIT_TO_CAVEMAN';
+      }
+      return 'CAVEMAN_TO_MIT';
     }
 
     handleInputChange() {
@@ -288,6 +327,12 @@
 
     populateModelSelect(models) {
       this.dom.modelSelect.innerHTML = '';
+
+      const autoOption = document.createElement('option');
+      autoOption.value = 'openrouter/free';
+      autoOption.textContent = 'AUTO — OpenRouter Free';
+      this.dom.modelSelect.appendChild(autoOption);
+
       models.forEach((m) => {
         const opt = document.createElement('option');
         opt.value = m.id;
@@ -295,13 +340,8 @@
         this.dom.modelSelect.appendChild(opt);
       });
 
-      if (models.length > 0) {
-        // Default to Google gemini-2.0-flash-exp:free or first
-        const preferred = models.find(m => m.id.includes('gemini-2.0-flash') || m.id.includes('llama-3.3-70b'));
-        const defaultId = preferred ? preferred.id : models[0].id;
-        this.dom.modelSelect.value = defaultId;
-        this.state.selectedModel = defaultId;
-      }
+      this.dom.modelSelect.value = 'openrouter/free';
+      this.state.selectedModel = 'openrouter/free';
     }
 
     async executeTranslation() {
@@ -319,12 +359,12 @@
       }
 
       this.hideError();
-      this.setLoading(true, `Querying ${model.split('/')[1] || model}...`);
+      this.setLoading(true, `Querying ${model === 'openrouter/free' ? 'OpenRouter Free' : model.split('/')[1] || model}...`);
 
       try {
         const result = await global.MansplainerProvider.executeTranslation({
           model,
-          mode: this.state.mode,
+          mode: this.resolvePromptMode(),
           inputText: input
         });
 

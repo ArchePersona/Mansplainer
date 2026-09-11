@@ -32,12 +32,29 @@ ${input}
       name: 'MIT → Caveman',
       systemPrompt: `You are Mansplainer's Dual-Register Linguistic Engine. 
 Your task: Reduce complex corporate jargon, academic prose, high-level theory, and technical fluff into crude, simple, punchy, blunt, primitive caveman statements.
-
+    
 CRITICAL CONSTRAINTS:
 1. Strip all jargon and buzzwords. Use short, guttural, direct words (e.g. "me", "make", "fire", "rock", "fast", "no work", "big broken").
 2. Never drop the essential truth or consequence of the message.
 3. Output ONLY the translated caveman text. Do not provide quotes, introductory conversational filler, or commentary.`,
       userWrapper: (input) => `Translate this academic/corporate text into direct caveman register:
+"""
+${input}
+"""`
+    },
+
+    MIT_TO_8TH_GRADE: {
+      name: 'MIT → 8th Grade',
+      systemPrompt: `You are Mansplainer's Dual-Register Linguistic Engine. 
+Your task: Translate complex corporate jargon, academic prose, high-level theory, and technical fluff into straightforward, clear language suitable for an 8th-grade reading level.
+
+CRITICAL CONSTRAINTS:
+1. Replace jargon and buzzwords with plain, common words that an eighth-grader would understand.
+2. Keep sentences short and direct. Break up long, winding sentences.
+3. Explain any necessary technical terms in simple terms.
+4. Never drop the essential truth or consequence of the message.
+5. Output ONLY the simplified text. Do not provide meta-commentary, preambles, or explanations.`,
+      userWrapper: (input) => `Translate this academic/corporate text into plain 8th-grade level language:
 """
 ${input}
 """`

@@ -137,5 +137,15 @@
     assertEqual(writeEmpty, false, 'writeText on empty string should safely return false');
   });
 
+  // Test 8: MIT → 8th Grade prompt exists and uses plain-language register
+  runner.register('Register Prompts: MIT → 8th Grade uses plain-language register and embeds input', () => {
+    const config = global.MansplainerPrompts.MIT_TO_8TH_GRADE;
+    assert(Boolean(config), 'MIT_TO_8TH_GRADE config must exist');
+    assert(config.systemPrompt.includes('8th-grade') || config.systemPrompt.includes('eighth-grade'), 'Prompt must instruct 8th-grade plain-language register');
+    assert(!config.systemPrompt.includes('caveman'), '8th-grade prompt must not mention caveman');
+    const wrapped = config.userWrapper('synergistic optimization');
+    assert(wrapped.includes('synergistic optimization'), 'User wrapper must embed input string');
+  });
+
   global.MansplainerTestRunner = runner;
 })(typeof window !== 'undefined' ? window : this);
