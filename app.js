@@ -340,8 +340,11 @@
         this.dom.modelSelect.appendChild(opt);
       });
 
-      this.dom.modelSelect.value = 'openrouter/free';
-      this.state.selectedModel = 'openrouter/free';
+      const lingId = 'inclusionai/ling-3.0-flash-fin:free';
+      const lingAvailable = models.some((m) => m.id === lingId);
+      const defaultId = lingAvailable ? lingId : 'openrouter/free';
+      this.dom.modelSelect.value = defaultId;
+      this.state.selectedModel = defaultId;
     }
 
     async executeTranslation() {
@@ -500,3 +503,4 @@
     global.appInstance = new MansplainerApp();
   });
 })(typeof window !== 'undefined' ? window : this);
+
