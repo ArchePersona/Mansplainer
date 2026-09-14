@@ -340,7 +340,7 @@
         this.dom.modelSelect.appendChild(opt);
       });
 
-      const lingId = 'inclusionai/ling-3.0-flash-fin:free';
+      const lingId = 'inclusionai/ling-3.0-flash-vl:free';
       const lingAvailable = models.some((m) => m.id === lingId);
       const defaultId = lingAvailable ? lingId : 'openrouter/free';
       this.dom.modelSelect.value = defaultId;
@@ -503,4 +503,5 @@
     global.appInstance = new MansplainerApp();
   });
 })(typeof window !== 'undefined' ? window : this);
+
 
