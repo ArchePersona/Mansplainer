@@ -6,9 +6,11 @@ Mansplainer is an AI-powered linguistic register translator. It converts blunt, 
 
 The goal is not ordinary summarization. Mansplainer changes **how an idea is expressed while preserving what the idea means**.
 
-## Live Demo
+## Hackathon Materials
 
-https://mansplainer-fire.web.app/
+- **Live Demo:** https://mansplainer-fire.web.app/
+- **Pitch Deck:** [Mansplainer-Pitch-Deck.pdf](./Mansplainer-Pitch-Deck.pdf)
+- **Source Code:** This repository
 
 ## What It Does
 
@@ -99,6 +101,7 @@ No framework, package manager, build system, or local application server is requ
 ├── firebase.json    Firebase Hosting configuration
 ├── .firebaserc      Firebase project configuration
 ├── .gitignore       Git exclusions
+├── Mansplainer-Pitch-Deck.pdf  Hackathon presentation deck
 └── README.md        Project and reviewer documentation
 ```
 
@@ -230,6 +233,7 @@ A reviewer can verify the submission quickly:
 5. Try the 8th Grade simplification option.
 6. Run **Architecture Verification** and inspect the test results.
 7. Review `openrouter.js`, `app.js`, and `tests.js` for the core implementation.
+8. Review [Mansplainer-Pitch-Deck.pdf](./Mansplainer-Pitch-Deck.pdf) for the hackathon presentation.
 
 ## Current Status
 
