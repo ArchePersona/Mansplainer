@@ -101,6 +101,7 @@ No framework, package manager, build system, or local application server is requ
 ├── firebase.json    Firebase Hosting configuration
 ├── .firebaserc      Firebase project configuration
 ├── .gitignore       Git exclusions
+├── LICENSE          MIT License
 ├── Mansplainer-Pitch-Deck.pdf  Hackathon presentation deck
 └── README.md        Project and reviewer documentation
 ```
@@ -241,4 +242,4 @@ Hackathon proof-of-concept and functional demonstration.
 
 ## License
 
-The source is publicly available for inspection and hackathon review. No separate license grant is asserted by this README; refer to a repository license file if one is added.
+Mansplainer is released under the [MIT License](./LICENSE).
