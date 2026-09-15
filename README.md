@@ -60,8 +60,7 @@ Mansplainer is intentionally small and browser-first. There is no application se
 ```text
 Browser UI
    |
-   +-- app.js -------- application state and interaction
-   +-- prompts.js ---- translation-register instructions
+   +-- app.js -------- application state, prompts, and interaction
    +-- clipboard.js -- clipboard boundary
    +-- openrouter.js - AI provider boundary
                          |
@@ -93,8 +92,7 @@ No framework, package manager, build system, or local application server is requ
 .
 ├── index.html       Application shell and UI
 ├── styles.css       Application styling and responsive layout
-├── app.js           UI state, interactions, translation workflow, test UI
-├── prompts.js       Translation modes and prompt definitions
+├── app.js           UI state, translation modes/prompts, interactions, test UI
 ├── openrouter.js    OpenRouter model discovery and completion provider
 ├── clipboard.js     Clipboard read/write boundary
 ├── tests.js         Integrated unit/functional verification tests
@@ -231,7 +229,7 @@ A reviewer can verify the submission quickly:
 4. Translate text in both directions.
 5. Try the 8th Grade simplification option.
 6. Run **Architecture Verification** and inspect the test results.
-7. Review `openrouter.js`, `prompts.js`, `app.js`, and `tests.js` for the core implementation.
+7. Review `openrouter.js`, `app.js`, and `tests.js` for the core implementation.
 
 ## Current Status
 
